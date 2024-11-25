@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast with Progress Bar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes slideDown {
+      from {
+        transform: translateY(-10%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    @keyframes slideUp {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-10%);
+        opacity: 0;
+      }
+    }
+    .toast-show {
+      animation: slideDown 0.5s ease forwards;
+    }
+    .toast-hide {
+      animation: slideUp 0.5s ease forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-800 flex items-center justify-center min-h-screen">
+
+  <!-- Buttons -->
+  <div class="space-x-4">
+    <button 
+      class="bg-teal-500 text-white px-6 py-2 rounded-full shadow-lg hover:bg-teal-600 focus:outline-none"
+      onclick="showToast('success', 'Sukses menyimpan data!')"
+    >
+      Show Success
+    </button>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-4 right-4 space-y-4 z-50"></div>
+
+  <script>
+    function showToast(type, message) {
+      const toastContainer = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `
+        toast-show relative flex items-center px-6 py-4 rounded-lg shadow-md text-white
+        ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}
+      `;
+
+      const text = document.createElement('span');
+      text.textContent = message;
+
+      const progressBar = document.createElement('div');
+      progressBar.className = `
+        absolute bottom-0 left-0 h-1 bg-white animate-progress 
+      `;
+      progressBar.style.animation = 'progress 3s linear';
+
+      toast.appendChild(text);
+      toast.appendChild(progressBar);
+      toastContainer.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.replace('toast-show', 'toast-hide');
+        toast.addEventListener('animationend', () => toast.remove());
+      }, 3000);
+    }
+  </script>
+
+  <style>
+    @keyframes progress {
+      from {
+        width: 100%;
+      }
+      to {
+        width: 0%;
+      }
+    }
+  </style>
+
+</body>
+</html>
